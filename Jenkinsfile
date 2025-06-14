@@ -14,10 +14,14 @@ spec:
     volumeMounts:
       - name: kaniko-secret
         mountPath: /kaniko/.docker
+        readOnly: true
   volumes:
     - name: kaniko-secret
       secret:
         secretName: dockerhub-secret
+        items:
+          - key: .dockerconfigjson
+            path: config.json
 """
         }
     }
@@ -42,16 +46,11 @@ spec:
                 dir('ci') {
                     container('kaniko') {
                         sh """
-                        echo '==> CURRENT DIR:'
-                        pwd
-                        echo '==> LIST FILES:'
-                        ls -al
-                        echo '==> SHOW DOCKERFILE:'
-                        cat Dockerfile || echo "No Dockerfile"
-                        echo '==> CHECK DOCKER CONFIG:'
-                        ls -al /kaniko/.docker/ || echo "No docker config"
-                        echo '==> START BUILD:'
-                        /kaniko/executor --dockerfile=Dockerfile --context=. --destination=${DOCKER_IMAGE}
+                        echo '==> CHECK KANIKO DOCKER CONFIG:'
+                        ls -la /kaniko/.docker/
+                        cat /kaniko/.docker/config.json || echo "No config.json found"
+                        echo '==> START BUILD WITH DEBUG:'
+                        /kaniko/executor --dockerfile=Dockerfile --context=. --destination=${DOCKER_IMAGE} --verbosity=debug
                         """
                     }
                 }
