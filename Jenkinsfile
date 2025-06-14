@@ -39,7 +39,11 @@ spec:
                 dir('ci') {
                     container('kaniko') {
                         sh """
-                        /kaniko/executor --dockerfile=Dockerfile --context=${WORKSPACE}/ci --destination=${DOCKER_IMAGE}
+                        echo '==> LIST FILES:'
+                        ls -al
+                        echo '==> SHOW DOCKERFILE:'
+                        cat Dockerfile || echo "No Dockerfile"
+                        /kaniko/executor --dockerfile=Dockerfile --context=. --destination=${DOCKER_IMAGE}
                         """
                     }
                 }
