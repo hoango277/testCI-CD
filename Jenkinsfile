@@ -31,7 +31,7 @@ spec:
         GIT_CI_REPO = "https://github.com/hoango277/testCI-CD.git"
         GIT_CD_REPO = "https://github.com/hoango277/CD-VDT.git"
         GIT_BRANCH = "main"
-        GIT_CRED = "95173ae0-f1e9-433b-a956-0777fccc7f0c"
+        GIT_CRED = "95173ae8-fde9-433b-a956-0777f0cc4f0c"
     }
     stages {
         stage('Checkout CI Repo') {
