@@ -8,9 +8,6 @@ spec:
   containers:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:latest
-    command:
-    - cat
-    tty: true
     volumeMounts:
       - name: kaniko-secret
         mountPath: /kaniko/.docker
@@ -58,7 +55,6 @@ spec:
         stage('Update deployment.yaml') {
             steps {
                 dir('cd') {
-                    // Sửa tag image trong deployment.yaml
                     sh """
                     sed -i 's|image: xuanhoa2772004/ci-cd-learn:.*|image: ${DOCKER_IMAGE}|' ${DEPLOYMENT_FILE}
                     """
