@@ -8,6 +8,10 @@ spec:
   containers:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:latest
+    command:
+    - sleep
+    args:
+    - 99d
     volumeMounts:
       - name: kaniko-secret
         mountPath: /kaniko/.docker
@@ -24,7 +28,7 @@ spec:
         GIT_CI_REPO = "https://github.com/hoango277/testCI-CD.git"
         GIT_CD_REPO = "https://github.com/hoango277/CD-VDT.git"
         GIT_BRANCH = "main"
-        GIT_CRED = "95173ae0-f1e9-433b-a956-0777fccc7f0c" // GitHub credential ID
+        GIT_CRED = "95173ae0-f1e9-433b-a956-0777fccc7f0c"
     }
     stages {
         stage('Checkout CI Repo') {
@@ -39,10 +43,15 @@ spec:
                 dir('ci') {
                     container('kaniko') {
                         sh """
+                        echo '==> CURRENT DIR:'
+                        pwd
                         echo '==> LIST FILES:'
                         ls -al
                         echo '==> SHOW DOCKERFILE:'
                         cat Dockerfile || echo "No Dockerfile"
+                        echo '==> CHECK DOCKER CONFIG:'
+                        ls -al /kaniko/.docker/ || echo "No docker config"
+                        echo '==> START BUILD:'
                         /kaniko/executor --dockerfile=Dockerfile --context=. --destination=${DOCKER_IMAGE}
                         """
                     }
